@@ -138,13 +138,27 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 SESSION_COOKIE_AGE=31536000
 
-CORS_ALLOWED_ORIGINS=['https://mechatronicsea.web.app/']
+CORS_ALLOWED_ORIGINS=['https://mechatronicsea.firebaseapp.com/']
 
 CORS_ALLOW_CREDENTIALS = True
 
-CSRF_TRUSTED_ORIGINS=['mechatronicsea.web.app']
+CSRF_TRUSTED_ORIGINS=['https://mechatronicsea.firebaseapp.com/']
 
-CORS_EXPOSE_HEADERS=['Set-Cookie']
+CORS_EXPOSE_HEADERS=['*']
+
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "accept-encoding",
+    "authorization",
+    "content-type",
+    "dnt",
+    "origin",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+    "x-token",
+    "x-user",
+]
 
 CSRF_COOKIE_SECURE = True
 
