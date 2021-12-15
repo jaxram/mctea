@@ -23,5 +23,6 @@ urlpatterns=[
     path('register_event',views.register_event,name='register_event'),
     path('delete_query',views.delete_query,name='delete_query'),
     path('unregister',views.unregister,name='unregister'),
+    path('excel_filter',views.excel_filter,name='excel_filter')
 ]
 

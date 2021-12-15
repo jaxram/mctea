@@ -435,6 +435,7 @@ def init_home(request):
                     else:
                         data2 = datetime.datetime.strptime(data1['postedon'], '%d/%m/%y %H:%M:%S')
                         data3 = datetime.datetime.now()
+                        print(data3)
                         diff =data3 - data2
                         days,seconds = diff.days,diff.seconds
                         hours = days * 24 + seconds // 3600
@@ -446,6 +447,7 @@ def init_home(request):
                             innerdict.update({'postedon':data1['postedon']})
                             innerdict.update({'message':data1['eventmessage']})
                             innerdict.update({'imgData':data1['imgdata']})
+                            innerdict.update({'time':hours})
                         else:
                             pass
                     """innerdict.update({'updateid':data1['updateid']})
@@ -817,4 +819,46 @@ def unregister(request):
         finaldict1.update({'message':'token verification failed'})
         finaldict1.update({'data':{}})
         return HttpResponse(json.dumps(finaldict1))
+@csrf_exempt
+def excel_filter(request):
+    finaldict1={}
+    eventid=request.POST.get('eventid')
+    datas=[]
+    temp={}
+    e1=Registration.objects.filter(eventid=eventid).values()
+    for data in e1:
+        eve=data['eventid']
+        use=data['userid']
+        m1=UserDetails.objects.filter(userid=use).values()
+        for i in m1.values():
+            name=i['name']
+            reg_no=i['reg_no']
+            mobile=i['mobile']
+            temp.update({"Name":name,"reg_no":reg_no,"mobile":mobile})
+        m3=UserId.objects.filter(userid=use).values()
+        for k in m3.values():
+            mail=k['email']
+            temp.update({"Email":mail})
+        m2=Events.objects.filter(eventid=eve).values()
+        print("/////////////")
+        print(m2)
+        for j in m2:
+            eventname=j['eventname']
+            temp.update({"event":j['eventname']})
+        datas.append(temp)
+        print(datas)
+        print("dict appended")
+        df = pd.DataFrame.from_dict(datas)
+        temp={}
+        print(temp)
+    date1 = datetime.datetime.now()
+    t=date1.strftime("%d_%m_%y_%H-%M-%S")
+    print(t)
+    p=r'/home/mctea/machuraz/static/excel/'+eventname+"_"+str(t)+r'_registered.xlsx'
+    fp=p[21:]
+    df.to_excel(p,index=False)
+    finaldict1.update({'status':'success'})
+    finaldict1.update({'message':'success'})
+    finaldict1.update({'data':r'https://mctea.pythonanywhere.com/'+str(fp)})
+    return HttpResponse(json.dumps(finaldict1))
 
